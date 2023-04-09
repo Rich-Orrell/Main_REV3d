@@ -1,0 +1,8 @@
+.fit-cover {
+  object-fit: cover;
+}
+
+.text-bg-dark {
+  background-color: RGBA(0, 27, 46,var(--bs-bg-opacity,1))!important;
+}
+

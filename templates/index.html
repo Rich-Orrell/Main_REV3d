@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>{% block title %} NSDP Home {% endblock title %}</title>
+
+
+    <link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+    <link rel='stylesheet' href="static/custom.css" type='text/css' >
+    </head>
+
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-dark main_header">
+            <div class="collapse navbar-collapse" id="navcol-5">
+            <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+               <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a>
+            </span>
+        </nav>
+
+    <!------------ End header ------------>
+
+
+
+        <div class = "row g-0 slider_con"></div>
+
+
+    <!------------------------- Main Body ---------------->
+    {% block body %}
+        <div class="border border-0 border-dark overflow-hidden first_row" >
+            <div class="row g-0">
+                <div class="col-md-12 p-3" style="background-color:#092325!important;" >
+                    <div class="text-white p-10 p-md-5">
+                        <h2 class="fw-bold text-white mb-3"><strong><span style="color: rgba(var(--bs-white-rgb),var(--bs-text-opacity)) ;font-family: bold_font;" >NATIONAL SECURITY DETECTION PORTAL</span></strong></h2>
+                        <p class="fs-6 mb-4"><span>Fighting cybercrime nationwide!</span></p>
+                        <p class="fs-6 mb-4"><span>For existing users, please login; for new users, please sign up!</span></p>
+<!--
+                        <a class="btn btn-lg me-2 " role="button" href="report-vulnerabilities" style="background: #31cdd7;font-size: 11pt; color: #fff; width:150pt; ">Submit a report</a>
+-->
+                        <a class="btn btn-lg me-2 " role="button" href="current-vulnerabilities" style="background: #31cdd7;font-size: 11pt; color: #fff; width:150pt">Current Reports</a>
+                        <a class="btn btn-lg me-2" role="button" href="login" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Portal Login</a>
+                        <a class="btn btn-lg me-2" role="button" href="signup" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Sign Up</a>    
+                    </div>
+                    </div>
+                </div>
+            </div>
+    {% endblock %}
+    <!------------------------- End Main Body ---------------->
+
+
+    <!------------------------- Footer ---------------->
+    {% block footer %}
+    <footer class="text-center  footer_1">
+        <div class="container text-white py-4 py-lg-5 ">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+            </ul>
+            <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+        </div>
+    </footer>
+     {% endblock  %}
+    <!------------------------- End Footer ---------------->
+    </body>
+</html>

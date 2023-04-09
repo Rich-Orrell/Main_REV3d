@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>{% block title %} NSCT {% endblock title %}</title>
+        <link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+        <link rel='stylesheet' href="static/custom.css" type='text/css' >
+
+
+        <!--- CSS Style for the popup - start  -->
+        <style>
+            .popup{
+                width: 400px;
+                background: #092325;
+                position: absolute;
+                top: 0%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.1);
+                text-align: center;
+                padding: 0 30px 15px;
+                color: #333;
+                visibility: hidden;
+                transition: transform 0.4s, top 0.4s;
+            }
+            
+            .open-popup{
+                visibility: visible;
+                top: 30%;
+                transform: translate(-50%, -50%) scale(1.0);
+            }
+    
+            .popup img{
+                width: 100px;
+                margin-top: -30px;
+                border-radius: 50%;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2)
+            }
+            .popup h2{
+                font-size: 30px;
+                font-weight: 500;
+                color: #fff;
+                margin: 30px 0 10px;
+            }
+            .popup h4{
+                font-size: 20px;
+                font-weight: 500;
+                color: #fff;
+                margin: 30px 0 10px;
+            }
+            .popup button{
+                width: 100%; 
+                margin-top: 50px;
+                padding: 10px 0;
+                background: #6fd649;
+                color: #fff;
+                border: 0;
+                outline: none;
+                font-size: 10px;
+                border-radius: 4px;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+        </style>
+        <!--- CSS Style for the popup - end  -->
+
+    </head>
+
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-dark main_header">
+            <div class="collapse navbar-collapse" id="navcol-5">
+            <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+               <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+        </nav>
+
+        <!------------ End header ------------>
+
+        <!--------------- Main --------------->
+
+        <h1 style="background: #092325 ;color: var(--bs-white);font-size: 23px;padding: 20px 10px 10px 16px;"><div class="container">Submit Your Cybersecurity Concerns Now!</div></h1>
+        <div class="container position-relative">
+            <div class="row d-flex justify-content-left">
+
+                <div class="col-12">
+                    {% block content %}
+                    <form method="POST" enctype="multipart/form-data" class="p-3 p-xl-4">
+
+                      <h4>{{title}} Welcome!</h4>
+
+                       <div class="split_input">
+                             <label class="form-label" for="fname">Case type : </label>
+                             <div class="mb-3"><input type="text" class="form-control" id="type" name="type" required></div>
+                        </div>
+
+                       <div class="split_input">
+                             <label class="form-label" for="vweb"> Domain link:</label>
+                             <div class="mb-3"><input type="url" class="form-control" id="vweb" name="vweb" placeholder="website link, e.g. https://www.odoo.com" required></div>
+                       </div>
+
+                        <div class="split_input">
+                             <label class="form-label" for="dtg">Data & Time:&nbsp;</label>
+                             <div class="mb-3"><input type="datetime-local" class="form-control" id="dtg" name="dtg" required></div>
+                        </div>
+
+                        <div class="full_input">
+                             <label class="form-label" for="vdesc">Description of Security vulnerability:</label>
+                             <div class="mb-3"><textarea class="form-control" id="vdesc" name="vd" rows="6" placeholder="Security vulnerability concern." required></textarea></div>
+                        </div>
+
+                        <div class="full_input">
+                             <label class="form-label" for="pfix">Suggestions:</label>
+                             <div class="mb-3"><input type="text" class="form-control" id="pfix" name="vs" placeholder="suggested fixes."></div>
+                        </div>
+
+                    
+                          <div class="full_input">
+                             <button class="btn btn-primary d-block w-15" style="width:150pt" type="submit" onclick='openPopup()'>Submit</button>
+                             <p></p>                           
+                             <a class="btn btn-lg me-2" role="button" href="logout" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Logout</a>
+
+                          </div>
+                    
+                    </form>
+
+        <!--- pop up module - start -->
+              <div class="container">
+                <!---
+                <button class="btn btn-lg me-2" style="background: #31cdd7;font-size: 11pt; color: #fff; width:150pt" type= 'submit' onclick='openPopup()'>Submit </button>
+                <p></p>
+                <a class="btn btn-lg me-2" role="button" href="logout" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Logout</a>
+-->
+                <div class='popup' id='popup'>
+                   <img src='tick.png'>
+                    <h2> Thank You! </h2>
+                    <h4>Sucessfully Submitted!</h4>
+                    <button type='button' onclick='closePopup()'>OK </button>
+               </div>
+            </div>
+          </div>
+ 
+            <script>
+               let popup = document.getElementById('popup');
+               function openPopup(){
+                   popup.classList.add('open-popup');
+               }
+               function closePopup(){
+                   popup.classList.remove('open-popup');
+               }
+               function openPopup1(){
+                   alert("successful");
+               }
+            </script>
+        <!--- pop up module - start -->
+
+                </div>
+
+                  <h1 style="background: #092325 ;color: var(--bs-white);font-size: 23px;padding: 20px 10px 10px 16px;"><div class="container">View Your Personal Information</div></h1>
+                  <div class="container position-relative">
+                    <div class="row d-flex justify-content-left">
+
+           <div class="col-12">
+                  <form class="p-3 p-xl-4" method="POST">
+                      <div class="full_input">
+                          <p><b>Would like to view/delete/update your recorded personal data or withdraw your consent? </b></p>
+                          </div>
+                            <a class="btn btn-primary d-block w-10" href="userinfo" style="width:150pt">View my data</a>
+                            <br>
+                            <a class="btn btn-primary d-block w-20" href="ur_rights" style="width:150pt">My rights</a>
+                          </div>
+                      </div>
+                  </form>
+                </div>
+            
+
+                  <h1 style="background: #092325 ;color: var(--bs-white);font-size: 23px;padding: 20px 10px 10px 16px;"><div class="container">View Your Case</div></h1>
+                  <div class="container position-relative">
+                      <div class="row d-flex justify-content-left">
+          
+            <div class="col-12">
+                    <form class="p-3 p-xl-4" method="POST">
+                        <div class="full_input">
+                            <p><b>Would like to view your cases? </b></p>
+                            </div>
+                         <a class="btn btn-primary d-block w-20" href="usercase" style="width:150pt">View my case</a>
+                            </div>
+                        </div>
+                    </form>
+ 
+                </div>
+       </div>
+     </div>
+        {% endblock %}
+
+
+        <!------------------------- Footer ---------------->
+        {% block footer %}
+        <footer class="text-center  footer_1">
+
+            <div class="container text-white py-4 py-lg-5 ">
+                <ul class="list-inline">
+                    <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                    <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+                </ul>
+                <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+            </div>
+
+        </footer>
+        {% endblock  %}
+        <!------------------------- End Footer ---------------->
+
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %} NSCT {% endblock title %}</title>
+
+
+<link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+<link rel='stylesheet' href="static/custom.css" type='text/css' >
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark main_header">
+        <div class="collapse navbar-collapse" id="navcol-5">
+        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+           <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+    </nav>
+<!------------ End header ------------>
+
+{%  block content %}
+<h1 style="background: #092325 ;color: var(--bs-white);font-size: 23px;padding: 20px 10px 10px 16px;"><div class="container">Personal data kept are:</div></h1>
+
+<div class="container min-vh-100 py-3 py-xl-5">
+    <div class="pad-text"></div>
+
+        <div class="pad-text">
+            <div class="p-5 border">
+                <div class="table-responsive">
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="width:250px">User ID</th>
+                            <th scope="col" style="width:250px">Login Name</th>
+                            <th scope="col" style="width:250px">First Name</th>
+                            <th scope="col" style="width:250px">Last Name</th>
+                            <th scope="col" style="width:250px">Contact Number</th>
+                            <th scope="col" style="width:250px">E-mail</th>
+                            <th scope="col" style="width:250px">Date of Birth</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                                <tr>
+                                    <td>{{ uInfo.user_id }}</td>
+                                    <td>{{ uInfo.login_name }}</td>
+                                    <td>{{ uInfo.first_name }}</td>
+                                    <td>{{ uInfo.last_name }}</td>
+                                    <td>{{ uInfo.mobile_no }}</td>
+                                    <td>{{ uInfo.email }}</td>
+                                    <td>{{ uInfo.date_of_birth }}</td>
+                                 </tr>
+
+
+                    </table>
+
+                    <P></P>
+                    <P></P>
+                    <P></P>
+                    <a class="btn btn-lg me-2" role="button" href="report-vulnerabilities" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Report a case</a>
+                    <a class="btn btn-lg me-2" role="button" href="usercase" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >View my case</a>
+                    <a class="btn btn-lg me-2" role="button" href="logout" style="background: #31cdd7 ;font-size: 11pt; color: #fff;width:150pt" >Logout</a>                
+                </div>
+            </div>
+        </div>
+    </div>
+
+{%  endblock %}
+
+
+<!------------------------- Footer ---------------->
+{% block footer %}
+    <footer class="text-center  footer_1">
+        <div class="container text-white py-4 py-lg-5 ">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+            </ul>
+            <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+        </div>
+    </footer>
+    {% endblock  %}
+<!------------------------- End Footer ---------------->
+
+</body>
+</html>
