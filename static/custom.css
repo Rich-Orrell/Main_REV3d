@@ -32,7 +32,7 @@ text-align: center;
 }
 
 .slider_con{
-background-image:url(http://192.168.0.165:5000/static/1.jpg);
+background-image:url(https://raw.githubusercontent.com/Rich-Orrell/Main_REV3d/master/static/1.jpg);
 height: 400px;
 background-size: cover;
 }
