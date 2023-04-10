@@ -15,6 +15,8 @@ import threading                        # For multi-threading
 import itertools                        # For generating table
 import os                               # For library shutil
 import shutil                           # For attaching the image of QR code to hmtl
+from tabulate import tabulate
+import textwrap
 
 # -----------------SQLSERVER----------------- #
 # server = 'uoe-cybercrime-app.database.windows.net'
@@ -502,8 +504,25 @@ def usercase():
 # ------ Internal officers's module  --------- #
 @app.route("/current-vulnerabilities")
 def currentv():
-    sessionuser = session['login_name']
-    return render_template("currentv.html")
+    conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
+    with conn: # View current reports
+        currentv = conn.cursor()
+        sqla = "SELECT case_id, case_type, case_priority, case_status, date_created, DomainLink FROM caseheader"
+        currentv.execute(sqla)
+        desc = currentv.description
+        column_names = [col[0] for col in desc]
+        data = [dict(zip(column_names, row)) for row in currentv.fetchall()]
+        currentv.close()
+
+        vulnerabilities = {}
+        i = 1
+        for vulnerability in data:
+            print(vulnerability)
+            vulnerabilities[i] =vulnerability 
+            i=i+1
+        print(vulnerabilities)
+
+        return render_template("currentv.html", vulnerabilities=vulnerabilities)
 
 
 # ------ Administrator's module  --------- #

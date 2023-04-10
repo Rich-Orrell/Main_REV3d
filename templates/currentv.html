@@ -40,12 +40,14 @@
                                 </thead>
 
                                 <tbody>
-                                {% for vulnerability in vulnerabilities %}
+                                {% for key, value in vulnerabilities.items() %}
                                     <tr>
-                                        <th scope="row">{{ vulnerability.vul_no }}</th>
-                                        <td>{{ vulnerability.vulnerable_website }}</td>
-                                        <td>{{ vulnerability.date_time }}</td>
-                                        <td>{{ vulnerability.description }}</td>
+                                        <th scope="row">{{ value.case_id }}</th>
+                                        <td>{{ value.case_type }}</td>
+                                        <td>{{ value.case_priority }}</td>
+                                        <td>{{ value.case_status }}</td>
+                                        <td>{{ value.date_created }}</td>
+                                        <td>{{ value.DomainLink }}</td>
                                      </tr>
                                 {% endfor %}
                                 </tbody>
