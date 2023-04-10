@@ -338,14 +338,15 @@ def logins():
 # ------ Public users: create and view  --------- #
 @app.route("/report-vulnerabilities", methods=['GET', 'POST'])
 def reportv():
+    ''' Public user's reporting '''
 
     # functions in Public user's module
-    def create_case(get_uid, login_name, type, domain_link): # create new case
+    def create_case(get_uid,  type, domain_link): # create new case
         # get case id from system
         cur_maxcase= conn.cursor()
         cur_maxcase.execute("select max(case_id) from CaseHeader ")
-        maxcase_result = cur_maxcase.fetchone() # assign sequential case id 
-        maxcase = maxcase_result[0]
+        maxcase_result = cur_maxcase.fetchone() # assign sequential case id
+        # maxcase = maxcase_result[0]
         new_caseid = int(maxcase_result[0])+1
         case_id = str(new_caseid)
         timestamp = date.today() # unix_today = int(time.mktime(today.timetuple()))
@@ -359,14 +360,14 @@ def reportv():
             print("case created")
             conn.commit()
             print("the case id sent fm create case id is:", case_id)
-            return(case_id)
-        
-    def create_entry(newcaseid, get_uid, login_name, v_d): # create new entry
+            return case_id
+
+    def create_entry(newcaseid, get_uid, v_details): # create new entry
         # get entry id from system
         conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
         cur_maxentry= conn.cursor()
         cur_maxentry.execute("select max(entry_ref) from casedetail")
-        maxentry_result = cur_maxentry.fetchone() # assign sequential entry ref 
+        maxentry_result = cur_maxentry.fetchone() # assign sequential entry ref
         maxentry = maxentry_result[0]
         new_entryid = int(maxentry)+1
         entry_ref = str(new_entryid)
@@ -376,7 +377,7 @@ def reportv():
         today = timestamp
 
         with conn:
-            newentry= (newcaseid, entry_ref, get_uid,today, v_d , today )
+            newentry= (newcaseid, entry_ref, get_uid,today, v_details , today )
             sqlentry = "INSERT INTO CaseDetail (case_id,entry_ref,entered_by,activity_datetime, activity_description,entry_datetime) VALUES(%s,%s,%s,%s,%s,%s)"
             cur_record = conn.cursor()
             cur_record.execute(sqlentry, newentry)
@@ -384,14 +385,14 @@ def reportv():
             conn.commit()
             return cur_record.lastrowid
 
-    def log(get_uid,activity,status): # for ref only
-        with conn:
-           Activity_3= (datetime.now(),get_uid,activity,status)
-           sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
-           curlog = conn.cursor()
-           curlog.execute(sqlc, Activity_3)
-           conn.commit()
-           return curlog.lastrowid
+    #def log(get_uid,activity,status): # for ref only
+    #   with conn:
+    #       activity_3= (datetime.now(),get_uid,activity,status)
+    #       sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
+    #       curlog = conn.cursor()
+    #       curlog.execute(sqlc, activity_3)
+    #       conn.commit()
+    #       return curlog.lastrowid
 
     ### Report_v main
     login_name = session['login_name']
@@ -410,9 +411,11 @@ def reportv():
         get_uid = get_user[1]
         conn.commit()
 
-        newcaseid = create_case(get_uid,login_name, type, domain_link)
+        newcaseid = create_case(get_uid, type, domain_link)
         print("newcaseid returned from create case is:", newcaseid)
-        new_entry = create_entry(newcaseid, get_uid, login_name, v_d)
+        v_combine = v_d+v_s+domain_link
+        new_entry = create_entry(newcaseid, get_uid, v_combine)
+        print("The new entry is: ", new_entry)
         # log(get_uid,"Create new case","Success")
         print("Thank you for your reporting!")
 
@@ -421,9 +424,11 @@ def reportv():
     return render_template("reportv.html", title = login_name)
 
 
+
 # ------ Public users: view personal data  --------- #
 @app.route("/userinfo")
 def userinfo():
+    '''Public users: view personal data'''
     def decoding(en_obj): # decryption
         en_key = b'l3FSJdFAhlk6dgV57ELV04bIzgMr1-yjxjTb9TfYwUM='
         fernet = Fernet(en_key)
@@ -431,8 +436,8 @@ def userinfo():
 
     ### userinfo main ###
     search_name = session['login_name']
-    print(search_name)
-    conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
+    print("search name is :", search_name)
+    #conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
     with conn:
         user_cur = conn.cursor()
         user_cur.execute("SELECT user_id, login_name, forename, surname, mobile_no, email, date_of_birth FROM Users WHERE login_name = '"+ search_name +"' ")
@@ -458,22 +463,26 @@ def userinfo():
 
         return render_template("userinfo.html", uInfo=uInfo)
 
+
 # ------ Public users: view own cases  --------- #
 @app.route("/usercase")
 def usercase():
+    '''Public users: view case data'''
     case_user = session['login_name']
-    print(case_user)
+    print("User retrive own case is:", case_user)
     conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
     with conn: # get user ID
-       user_cur = conn.cursor()
-       user_cur.execute("SELECT user_id FROM users WHERE login_name = '"+ case_user +"' ")
-       case_uid = user_cur.fetchone()
-       str_case_uid = str(case_uid[0])
+        user_cur = conn.cursor()
+        user_cur.execute("SELECT user_id FROM users WHERE login_name = '"+ case_user +"' ")
+        case_uid = user_cur.fetchone()
+        str_case_uid = str(case_uid[0])
+        print("the uid of the user who retriving own cae is:", str_case_uid)
 
     conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
     with conn: # get case reported by this user
         case_cur = conn.cursor()
         sqla = "SELECT entered_by, case_id, entry_ref, activity_description, feedback, officer_id FROM casedetail WHERE entered_by = %s"
+        print(sqla)
         case_cur.execute(sqla, [str_case_uid])
         desc = case_cur.description
         column_names = [col[0] for col in desc]
@@ -514,3 +523,9 @@ def logout():
 # -------- standard practice to run flask server ---------- #
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
+
+
+
+# Reference:
+# NeuralNine (nd) Available from: https://www.youtube.com/watch?v=o0XZZkI69E8 [Accessed on 1 March 2023]
+# Jalli A. (nd) Available from: https://www.codingem.com/how-to-calculate-age-in-python/ [Accessed on 29 March 2023]
