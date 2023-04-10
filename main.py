@@ -13,6 +13,8 @@ from PIL import Image                   # For display the QR code as image
 import re                               # For input validation
 import threading                        # For multi-threading
 import itertools                        # Elsie: For generating table
+import os
+import shutil
 
 # -----------------SQLSERVER----------------- #
 # server = 'uoe-cybercrime-app.database.windows.net'
@@ -48,18 +50,21 @@ def base():
 def hompage():
     return render_template("homepage.html")
 
-# ---------------- Sign Up ----------------- #
+# ---- Sign up ------ #
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+    '''  Sign Up  '''
 
     ### functions within sign up ###
-    def minor(birthdate): # age calculator (Source: Jalli, nd). User under 16 need perental consent under GDPR
+    def minor(birthdate):
+        '''User under 16 need perental consent under GDPR (Source: Jalli, nd)'''
         today = date.today()  # Get today's date object
         # check if before or after birthday (before, addon =0; after, addon =1)
         if (today.month, today.day) < (birthdate.month, birthdate.day):
             addon =0
-        else:
-            addon =1
+        # else:
+        addon =1
+
         year_diff = today.year - birthdate.year # check diff in year
         age = year_diff + addon # calculating age
         if age<16:
@@ -67,40 +72,45 @@ def signup():
             flash('Sorry, perental consent for person age below 16, please contact our data protection officer (fg@minaz.nl), Goodbye.', category='error')
             print('failed')
             return render_template('index.html')
-        else:
-            print("age valid")
-            return('succ')
+        # else:
+        print("age valid")
+        return 'succ'
 
-    def signup_otp(username):      # Generating OTP for 2FA (Source: NeuralNine, nd)
+    def signup_otp(username):
+        '''Generating OTP for 2FA (Source: NeuralNine, nd)'''
         skey=pyotp.random_base32() #  to generate a random secret key for this new user
         timeotp = pyotp.TOTP(skey) #  to apply the key in TOTP
-        new_onetimepass = (timeotp.now()) #  to generate the one time password
-        print("[Display for testing only:] The OTP is: ", new_onetimepass) # display for testing purpose
- 
+        new_onetimepass = timeotp.now() #  to generate the one time password
+        print("[Display for testing only:] The OTP is: ",new_onetimepass) # testing only
+
         # Pre-set time interval for generating a new OTP is 30s
         uri = pyotp.totp.TOTP(skey).provisioning_uri(name=username,
                                                    issuer_name="Dutch Cyber Crime Reporting App"
                                                    ) # generate QR code seed
-        qrcode.make(uri).save("popt1.png") # convert the "code seed" to pictural QR code as potp1.png
-        img = Image.open("popt1.png")      # open the image
-        img.show()                         # show the image
+        qrcode.make(uri).save("popt1.png") # convert code seed to QR code as popt1.png
+        shutil.copy('popt1.png','./static/popt1.png') # NEW230410-0125
+        # shutil.copy(origin+file_name, target+file_name) # NEW230410-0125
+        # img = Image.open("popt1.png") # NEW230410-0125
+        # img.show() # NEW230410-0125
         return(new_onetimepass,skey)
 
-    def verify_otp(notp, signup_otp): # Verifying OTP for 2FA (Source: NeuralNine, nd)
-        if notp == signup_otp:
+    def verify_otp(otp, signup_otp):
+        '''Verifying OTP for 2FA (Source: NeuralNine, nd)'''
+        if otp == signup_otp:
             print("Result: Verified")
-            return("Correct")
-        else:
-            flash('Sorry, incorrect OTP. Please try again.', category='error')
-            return("Wrong")
+            return "Correct"
+        #else:
+        flash('Sorry, incorrect OTP. Please try again.', category='error')
+        return "Wrong"
 
-    def coding(obj): # Encryption of persaonl information before sending to database
+    def coding(obj):
+        '''Encryption of persaonl information before sending to database'''
         en_key = b'l3FSJdFAhlk6dgV57ELV04bIzgMr1-yjxjTb9TfYwUM='
-        f = Fernet(en_key)              # value of key is assigned to a variable
-        return(f.encrypt(obj.encode())) # the plaintext is converted to ciphertext
+        fern = Fernet(en_key)              # value of key is assigned to a variable
+        return(fern.encrypt(obj.encode())) # the plaintext is converted to ciphertext
 
-    # Create record in database
-    def create_record(new_uid,username,lastname, firstname, email_address, mobile, dob, password):
+    def create_record(new_uid2,username,lastname, firstname, email_address, mobile, dob, password):
+        ''' Create record in database '''
         en_lastname = coding(lastname) # personal data are encrypted before transfer to database
         en_firstname = coding(firstname)
         en_email = coding(email_address)
@@ -109,48 +119,47 @@ def signup():
         en_pwd = coding(password)
         timestamp = date.today() # unix_today = int(time.mktime(today.timetuple()))
         today = timestamp
-        timestampexpiry = today+timedelta(days=180)
 
         conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
-        newusers= (new_uid, username, en_lastname, en_firstname, en_email, en_mobile, en_dob, en_pwd, "secretkey","public",today, today,1)
+        newusers= (new_uid2, username, en_lastname, en_firstname, en_email, en_mobile, en_dob, en_pwd, "secretkey","public",today, today,1)
         sqlr = "INSERT INTO users (user_id, login_name, surname, forename, email, mobile_no, date_of_birth, password, secret_key, role_id, date_activated, date_added, active_flag) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         cur_record = conn.cursor()
         cur_record.execute(sqlr, newusers)
-#OK     cur_record.execute("INSERT INTO users (user_id, login_name, surname, forename, email, mobile_no, date_of_birth, password, secret_key, role_id, date_activated, date_added, active_flag) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" ,('1', 'Elsa123', 'Odl', 'Elsa', 'email of elsa', '+44-123-2323','encoded dob','encoded pwd', 'secret-key', 'public','20230101','20230101',1))
 
-        print("record created 3")
         conn.commit()
         conn.close()
         return cur_record.lastrowid
 
-    def update_record(new_uid1, secret_key1): # Update record in database
+    def update_record(new_uid1, secret_key1):
+        ''' Update record in database '''
         en_secretkey = coding(secret_key1)
         sqlu = "UPDATE Users SET secret_key = %s WHERE user_id = %s "
         data = (en_secretkey, new_uid1)
-        
-        conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
+
+        #conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
         cur_update = conn.cursor()
         cur_update.execute(sqlu,data)
         conn.commit()
         print(new_uid1, "updated")
         return cur_update.lastrowid
 
-    def delete_record(new_uid2): # Delete record in database
-        conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
+    def delete_record(new_uid2):
+        ''' Delete record in database '''
+        #conn = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
         cur_delete = conn.cursor()
         cur_delete.execute("DELETE from Users WHERE user_id = %s ",[new_uid2])
         conn.commit()
         cur_delete.close()
         print(new_uid2, " deleted")
 
-    def log(id,activity,status): # Log for reference
-        with conn:
-           Activity_1= (datetime.now(),id,activity,status)
-           sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
-           curlog = conn.cursor()
-           curlog.execute(sqlc, Activity_1)
-           conn.commit()
-           return curlog.lastrowid
+    #def log(uid,activity,status): # Log for reference
+    #   with conn:
+    #       activity_1= (datetime.now(),uid,activity,status)
+    #       sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
+    #       curlog = conn.cursor()
+    #       curlog.execute(sqlc, activity_1)
+    #       conn.commit()
+    #       return curlog.lastrowid
 
     ### Sign up Main ###
     if request.method == 'POST':
@@ -173,41 +182,34 @@ def signup():
             newcur = conn.cursor()
             newcur.execute("SELECT login_name, user_id FROM Users WHERE login_name = '"+ username +"' ") # Search from db
             matchuser = newcur.fetchone()
-            #allcur=conn.cursor()
-            #allcur.execute("SELECT login_name, user_id, password FROM Users") # Search from db
-            #alluser = allcur.fetchall()
 
             if matchuser != None: # username exist
-                matched = (matchuser[0])
                 print(username, "already exist.")
                 flash('Username already exist, please try again.', category='error')
-                matched_id = (matchuser[1])
                 print('failed')
-                # log(matched_id,"Create failed: user already exist", "failed") # db is used to generating log
+                # log(matched_id,"Create failed: user already exist", "failed")
                 return render_template('signup.html')
             else: # username not exist
                 global new_uid
                 cur_max= conn.cursor()
                 cur_max.execute("select max(user_id) from Users ")
                 max_result = cur_max.fetchone() # assign user_id of the new user from the system
-                max = max_result[0]
-                max = int(max)
-                new_uid = str(max+1)
+                maxid = int(max_result[0])
+                new_uid = str(maxid+1)
                 print("new uid",new_uid)
-                
+
                 # check age
                 global notp, secret_key
                 user_dob = date(int(dob[0:4]), int(dob[5:7]), int(dob[8:10]))
-                age_res = minor(user_dob) # pass if age 16 or above, otherwise perental consent is required
+                age_res = minor(user_dob) # age under 16 need perental consent
                 if age_res == 'succ':
-                   create_record(new_uid,username,lastname, firstname, email_address, mobile, dob, password)
-                   generated_otp = signup_otp(username)
-                   notp = generated_otp[0]
-                   secret_key = generated_otp[1]
-                   return render_template('signupotp1.html')
-                else:
-                   # log("New user","Create failed: parental consent required", "failed")
-                   print("failed")
+                    create_record(new_uid,username,lastname, firstname, email_address, mobile, dob, password)
+                    generated_otp = signup_otp(username)
+                    notp = generated_otp[0]
+                    secret_key = generated_otp[1]
+                    return render_template('signupotp1.html')
+                # log("New user","Create failed: parental consent required", "failed")
+                print("failed")
 
         except: # running otp for signup
             new_otp = request.form['signup_otp']
@@ -216,12 +218,10 @@ def signup():
                 update_record(new_uid, secret_key)
                 # log(new_uid,"Create success", "succes")
                 print("post : user => ", new_uid)
-                request.method == 'GET'
                 return redirect(url_for('logout'))
-            else:
-                # log("New user","Create failed: incorrect OTP", "failed")
-                delete_record(new_uid)
-    
+            # log("New user","Create failed: incorrect OTP", "failed")
+            delete_record(new_uid)
+
     return render_template("signup.html")
 
 # ---- Display user terms of consent-------- #
@@ -237,38 +237,42 @@ def ur_rights():
 # ---------------- Log in  ----------------- #
 @app.route("/login", methods=['GET', 'POST'])
 def logins():
+    ''' Log in '''
 
     ### functions within login ###
-    def decoding(en_obj): # decryption of encrypted persaonl data before use
+    def decoding(en_obj):
+        '''decryption of encrypted persaonl data before use'''
         en_key = b'l3FSJdFAhlk6dgV57ELV04bIzgMr1-yjxjTb9TfYwUM='
         fernet = Fernet(en_key)
         return(fernet.decrypt(en_obj).decode())
 
-    def login_otp(cuser,skey): # Generating OTP for 2FA (Source: NeuralNine, nd)
+    def login_otp(cuser,skey):
+        ''' Generating OTP for 2FA (Source: NeuralNine, nd) '''
         timeotp =pyotp.TOTP(decoding(skey))
-        onetimepass =(timeotp.now())
+        onetimepass = timeotp.now()
         print(cuser,", the OPT is: ", onetimepass)
-        return(onetimepass)
+        return onetimepass
 
-    def verify_otp(gotp, your_ot): # Verifying OTP, Only 30 seconds to enter OTP, (Source: NeuralNine, nd)
+    def verify_otp(gotp, your_otp): #  NEW
+        ''' Verifying OTP, valid for 30 seconds (Source: NeuralNine, nd) '''
         if gotp == your_otp:
             print("Result: Verified")
-            return("Correct")
-        else:
-            flash('Sorry, incorrect OTP. Please try again.', category='error')
-            return("Wrong")
+            return "Correct"
+        flash('Sorry, incorrect OTP. Please try again.', category='error')
+        return "Wrong"
 
-    def log(id,activity,status): # Log for ref only
-        with conn:
-           now = datetime.now()
-           Activity_2= (datetime.now(),id,activity,status)
-           sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
-           curlog = conn.cursor()
-           curlog.execute(sqlc, Activity_2)
-           conn.commit()
-           return curlog.lastrowid
+    # def log(id,activity,status): # Log for ref only
+    #   with conn:
+    #       now = datetime.now()
+    #       activity_2= (datetime.now(),id,activity,status)
+    #       sqlc = "INSERT INTO System_log (datetime,user_id, activity,status) VALUES(%s,%s,%s,%s)"
+    #       curlog = conn.cursor()
+    #       curlog.execute(sqlc, activity_2)
+    #       conn.commit()
+    #       return curlog.lastrowid
 
     class CURRENT_USERS: # Defining current users as a class
+        ''' Define current users '''
         def __init__(self, user_id, login_name, password, secret_key, role_id):
             self.user_id = user_id
             self.login_name = login_name
@@ -276,33 +280,33 @@ def logins():
             self.secret_key = secret_key
             self.role_id = role_id
         def depassword(self):
+            ''' decode password for comparison '''
             try:
                 return decoding(self.password)
             except:
                 flash('Incorrect username or password, try again, thanks.', category='error')
                 print('failed')
-                return render_template('login.html') 
-    
+                return render_template('login.html')
+
     ### Login Main ###
-    db = conn.cursor()
+    db1 = conn.cursor()
     if request.method == 'POST' :
         try: # Check if user exist - exist
             username = request.form['username'] # User enter username and password upon login
             password = request.form['password']
-            db.execute("SELECT user_id, login_name, password, secret_key,role_id FROM users WHERE login_name = '"+username+"' ")
-            user = db.fetchone()
+            db1.execute("SELECT user_id, login_name, password, secret_key,role_id FROM users WHERE login_name = '"+username+"' ")
+            user = db1.fetchone()
             try:
                 global gotp, cuser
                 cuser=CURRENT_USERS(user[0],user[1],user[2],user[3],user[4]) # Current user
                 if cuser.depassword() == password: # Verifying user password
                     print('succs and switch to otp')
-                    gotp = login_otp(cuser.login_name, cuser.secret_key) # 2FA: generating amd return OTP
+                    gotp = login_otp(cuser.login_name, cuser.secret_key) # 2FA: generate OTP
                     return render_template('loginotp1.html')
-                else:
-                    flash('Incorrect password, try again.', category='error') # Incorrect password
-                    print('failed')
-                    # log(cuser.user_id,"Login failed: incorrect password", "failed")
-                    return render_template('login.html')
+                flash('Incorrect password, try again.', category='error') # Incorrect password
+                print('failed')
+                # log(cuser.user_id,"Login failed: incorrect password", "failed")
+                return render_template('login.html')
 
             except: # Check if user exist - Non-exist
                 flash('User not exist, try again.', category='error')
@@ -322,7 +326,7 @@ def logins():
                     return render_template('login_officer.html', title = cuser.login_name)
                 elif cuser.role_id == "DPO":
                     return render_template('login_officer.html', title=cuser.login_name)
-                elif cuser.role_id == "admin":
+                elif cuser.role_id == "adm": # NEW
                     return render_template('login_adm.html', title=cuser.login_name)
             elif result == "Wrong":
                 # log(cuser.user_id,"Login failed: incorrect OTP", "failed")

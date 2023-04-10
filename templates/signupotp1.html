@@ -37,7 +37,7 @@
                 text-align: center;
                 font-size: 30px;
                 letter-spacing: 2px;
-                margin-top: 15px;
+                margin-top: 5px;
                 font-weight: bold;
                 color: #ECF0F5;
             }
@@ -176,21 +176,25 @@
         {% endif %} {% endfor %} {% endif %} {% endwith %}
 
     <!------ error massage box ---->
+    
 
         <div class="container">
-            <div class="row">
 
+            <div class="row">
                 <div class="col-lg-3 col-md-2"></div>
                 <div class="col-lg-6 col-md-8 login-box">
+
+                    <img src="{{url_for('static', filename='popt1.png')}}"  width="150" height="150" />
                     <div class="col-lg-12 login-key"><i class="fa fa-key" aria-hidden="true" style="size: 10pt"></i></div>
                     <div class="col-lg-12 login-title">NSDP PORTAL</div>
 
                     <div class="col-lg-12 login-form">
                         {% block content %}
+                        
                         <form method="POST" enctype="multipart/form-data">
 
                             <div class="form-group">
-                                <label class="form-control-label " style="color: #fff">SIGN UP OTP from google authenitator (velid for 30 seconds)</label>
+                                <label class="form-control-label " style="color: #fff">PLEASE SCAN THE QR CODE ABOVE WITH GOOGLE AUTHENTICATOR TO GET THE OTP (velid for 30 seconds)</label>
                                 <input
                                 name="signup_otp"
                                 type="text"
@@ -204,16 +208,16 @@
 
 
                             <div class="col-lg-6 login-btm login-button">
-                                <button type="submit"  class="btn btn-outline-primary" onclick='openPopup1()'>SUBMIT</button>
+                                <button type="submit"  class="btn btn-outline-primary" >SUBMIT</button>
                             </div>
-
+                            
                         </form>
 
             <!---  sign up sucessful pop up - beginning -->
 
             <script>
              function openPopup1(){
-                   alert("Sign Up Successful, forwarding to homeage.");
+                   alert("OTP submitted: Note the warning. If successful, will forward to homeage.");
                }
              </script>
 
