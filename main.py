@@ -12,9 +12,9 @@ import qrcode                           # For convert OTP to qrcode upon signup
 from PIL import Image                   # For display the QR code as image
 import re                               # For input validation
 import threading                        # For multi-threading
-import itertools                        # Elsie: For generating table
-import os
-import shutil
+import itertools                        # For generating table
+import os                               # For library shutil
+import shutil                           # For attaching the image of QR code to hmtl
 
 # -----------------SQLSERVER----------------- #
 # server = 'uoe-cybercrime-app.database.windows.net'
