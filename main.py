@@ -853,23 +853,29 @@ def database_activity() :
 # Define a route for the view_events URL
 @app.route ( '/view_events' )
 def view_events() :
-    mycursor.execute ( "SELECT event_time, user_host, thread_id, command_type, argument FROM mysql.general_log")
+    # Create a cursor object
+    mycursor = mysql.connector.connect(host="uoe-cybercrime-app.mysql.database.azure.com", user="ro_admin", passwd="Abc!!!123", database="cybercrime_app")
 
-    # Fetch results
-    results = mycursor.fetchall ( )
+    # Execute a SQL query to select data from the systemlog table
+    mycursor.execute("SELECT activity_datetime, activity_type, table_changed, column_changed, old_value, new_value, changed_row_id FROM systemlog")
+
+    # Fetch the results of the query
+    results = mycursor.fetchall()
 
     # Wrap long text in the results to a limited width
     max_width = 20
     wrapped_results = []
-    for row in results :
-        wrapped_row = [textwrap.fill ( str ( cell ) , max_width ) for cell in row]
-        wrapped_results.append ( wrapped_row )
+    for row in results:
+        wrapped_row = [textwrap.fill(str(cell), max_width) for cell in row]
+        wrapped_results.append(wrapped_row)
 
     # Display the results as a table
-    headers = ["Event Time" , "User Host" , "Thread ID" , "Command Type" , "Argument"]
-    table = tabulate ( wrapped_results , headers=headers , tablefmt="fancy_grid" )
+    headers = ["Event Time", "Activity Type", "Table Changed", "Column Changed", "Old Value", "New Value", "Changed Row ID"]
+    table = tabulate(wrapped_results, headers=headers, tablefmt="fancy_grid")
 
-    return Response ( table , content_type='text/plain; charset=utf-8' )
+    # Return the table as a response
+    return Response(table, content_type='text/plain; charset=utf-8')
+
 
 
 # Define a route for the view_users URL
@@ -898,7 +904,7 @@ def view_users() :
     return Response ( table , content_type='text/plain; charset=utf-8' )
 
 # update cases
-@app.route("/update_case", methods=["POST"])
+@app.route("/update_cases", methods=["POST"])
 def update_case():
     # Get form data
     case_id = request.form["case_id"]
