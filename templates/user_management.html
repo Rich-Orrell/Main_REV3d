@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %} NSCT {% endblock title %}</title>
+
+
+<link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+<link rel='stylesheet' href="static/custom.css" type='text/css' >
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark main_header">
+        <div class="collapse navbar-collapse" id="navcol-5">
+        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+           <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+    </nav>
+<!------------ End header ------------>
+    
+
+{% block content %}
+
+<form method="POST">
+    <div class="form-group">
+        <label for="user_id">User ID:</label>
+        <input type="text" class="form-control" id="user_id" name="user_id">
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname:</label>
+        <input type="text" class="form-control" id="surname" name="surname">
+    </div>
+    <div class="form-group">
+        <label for="forename">Forename:</label>
+        <input type="text" class="form-control" id="forename" name="forename">
+    </div>
+    <div class="form-group">
+        <label for="active_flag">Active Flag:</label>
+        <input type="number" class="form-control" id="active_flag" name="active_flag">
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="form-group">
+        <label for="mobile_no">Mobile Number:</label>
+        <input type="tel" class="form-control" id="mobile_no" name="mobile_no">
+    </div>
+    <div class="form-group">
+        <label for="date_of_birth">Date of Birth:</label>
+        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth">
+    </div>
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="anonymous" name="anonymous">
+        <label class="form-check-label" for="anonymous">Make Anonymous</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+
+
+<!------------------------- Footer ---------------->
+{% block footer %}
+    <footer class="text-center  footer_1">
+        <div class="container text-white py-4 py-lg-5 ">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+            </ul>
+            <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+        </div>
+    </footer>
+    {% endblock  %}
+<!------------------------- End Footer ---------------->
+
+</body>
+</html>

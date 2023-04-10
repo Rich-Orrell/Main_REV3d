@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Events</title>
+</head>
+<body>
+    <h1>View Events</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Event Time</th>
+                <th>User Host</th>
+                <th>Thread ID</th>
+                <th>Command Type</th>
+                <th>Argument</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %} NSCT {% endblock title %}</title>
+
+
+<link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+<link rel='stylesheet' href="static/custom.css" type='text/css' >
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark main_header">
+        <div class="collapse navbar-collapse" id="navcol-5">
+        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+           <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+    </nav>
+<!------------ End header ------------>
+
+{%  block content %}
+
+    <h1>Update Case</h1>
+    <form method="post" action="/update_case">
+      <label for="case_id">Case ID:</label>
+      <select name="case_id" id="case_id">
+        {% for case_id in case_ids %}
+        <option value="{{ case_id }}">{{ case_id }}</option>
+        {% endfor %}
+      </select>
+      <br>
+      <label for="activity_description">Activity Description:</label>
+      <input type="text" name="activity_description" id="activity_description">
+      <br>
+      <label for="feedback">Feedback:</label>
+      <input type="text" name="feedback" id="feedback">
+      <br>
+      <label for="investigation_note">Investigation Note:</label>
+      <input type="text" name="investigation_note" id="investigation_note">
+      <br>
+      <label for="case_status">Case Status:</label>
+      <select name="case_status" id="case_status">
+        <option value="Investigation in Progress">Investigation in Progress</option>
+        <option value="Arrested">Suspect Arrested</option>
+        <option value="Court">Court</option>
+        <option value="Convicted - Closed">Convicted - Closed</option>
+        <option value="Further Investigation">Further Investigation</option>
+        <option value="No Conviction - Closed">No Conviction - Closed</option>
+      </select>
+      <br>
+      <label for="case_type">Case Type:</label>
+      <select name="case_type" id="case_type">
+        {% for case_type, case_type_desc, treatment in case_types %}
+        <option value="{{ case_type }}">{{ case_type }} - {{ case_type_desc }} {{ treatment }}</option>
+        {% endfor %}
+      </select>
+      <br>
+      <label for="entered_by">Entered By:</label>
+      <input type="text" name="entered_by" id="entered_by">
+      <br>
+      <label for="officer_id">Officer ID:</label>
+      <select name="officer_id" id="officer_id">
+        {% for officer_id, officer_name in officers %}
+        <option value="{{ officer_id }}">{{ officer_name }}</option>
+        {% endfor %}
+      </select>
+      <br>
+      <input type="submit" value="Update Case">
+    </form>
+
+
+
+<!------------------------- Footer ---------------->
+{% block footer %}
+    <footer class="text-center  footer_1">
+        <div class="container text-white py-4 py-lg-5 ">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+            </ul>
+            <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+        </div>
+    </footer>
+    {% endblock  %}
+<!------------------------- End Footer ---------------->
+
+</body>
+</html>

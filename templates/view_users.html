@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Users</title>
+</head>
+<body>
+    <h1>View Users</h1>
+    <label class="form-label" for="uname">Username [combination of letters and digits only]: </label>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Login Name</th>
+                <th>Role ID</th>
+                <th>Active Flag</th>
+                <th>Date Activated</th>
+                <th>Date Deactivated</th>
+                <th>Password Expiry</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+                <td>{{ row[5] }}</td>
+                <td>{{ row[6] }}</td>
+                <td>{{ row[7] }}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+<label class="form-label" for="uname">Username [combination of letters and digits only]: </label>
+</body>
+</html>

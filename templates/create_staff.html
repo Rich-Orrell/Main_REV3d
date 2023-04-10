@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+        <title>{% block title %} NSDP Reports {% endblock title %}</title>
+        <link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+        <link rel='stylesheet' href="static/custom.css" type='text/css' >
+    </head>
+
+    <body class="d-flex flex-column min-vh-100">
+        <nav class="navbar navbar-expand-lg navbar-dark main_header">
+            <div class="collapse navbar-collapse" id="navcol-5">
+            <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+               <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+        </nav>
+
+    <!------------ End header ------------>
+
+
+  <h1 style="background: #092325; color: var(--bs-white); font-size: 23px; padding: 20px 10px 10px 16px;">
+    <div class="container">Sign Up</div>
+  </h1>
+  <div class="container position-relative">
+    <div class="row d-flex justify-content-left">
+      <div class="col-6">
+        <form method="POST" action="/signup" enctype="multipart/form-data">
+          <div class="full_input">
+            <label class="form-label" for="uname">Username [combination of letters and digits only]: </label>
+            <div class="mb-3"><input type="text" class="form-control" id="uname" name="uname" placeholder="sam1995" pattern="^[A-Za-z0-9]*$" required></div>
+          </div>
+          <div class="split_input">
+            <label class="form-label" for="fname">First Name : </label>
+            <div class="mb-3"><input type="text" class="form-control" id="fname" name="fname" placeholder="First name" pattern="^[A-Za-z'-]*$" required></div>
+          </div>
+          <div class="split_input">
+            <label class="form-label" for="lname">Last Name :</label>
+            <div class="mb-3"><input type="text" class="form-control" id="lname" name="lname" placeholder="Last name" pattern="^[A-Za-z'-]*$" required></div>
+          </div>
+          <div class="full_input">
+            <label class="form-label" for="email">Email Address :</label>
+            <div class="mb-3"><input type="email" class="form-control" id="email
+" name="email" placeholder="e.g. sam.parkinson@gmail.com" required></div>
+</div>
+<div class="split_input">
+<label class="form-label" for="mobile">Contact number: </label>
+<div class="mb-3"><input type="text" class="form-control" id="mobile" name="mobile" placeholder="e.g. +44-12345678" pattern="^[0-9+-]*$" required></div>
+</div>
+<div class="split_input">
+<label class="form-label" for="dtg">Date of Birth: </label>
+<div class="mb-3"><input type="date" class="form-control" id="dob" name="dob" required></div>
+</div>
+<p>Password rules: 8-20 characters, include at least 1 uppercase, lowercase, digit, special character of #?!@$%^&*-_</p>
+<div class="split_input">
+<label class="form-label" for="dtg">Password: </label>
+<div class="mb-3"><input type="password" class="form-control" id="pwd1" name="pwd1" minlength="8" maxlength="20" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,20}$" required></div>
+</div>
+<div class="split_input">
+<label class="form-label" for="dtg">Re-enter your password: </label>
+<div class="mb-3"><input type="password" class="form-control" id="pwd2" name="pwd2" minlength="8" maxlength="20" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,20}$" required></div>
+</div>
+<p>Please read the data privacy policy:</p>
+<p><a href="https://www.government.nl/privacy" target="_blank" rel="noopener noreferrer"> Data privacy policy </a> </p>
+<p>Please read the user consent carefully:</p>
+<a href="ur_consent">User Consent</a>
+<fieldset>
+<div>
+<input type="checkbox" id="consent" name="consent" required>
+<label for="consent">I confirm that the above personal information are correct and I give my consent for you to collect your personal information.</label>
+</div>
+</fieldset>
+<p></p>
+<p></p>
+<div class="full_input"><button class="btn btn-primary d-block w-15" style="width:150pt" type="submit">Submit</button></div>
+<p></p>
+<p></p>
+<a class="btn btn-lg me-2" role="button" href="index.htm" style="width:150pt">Back</a>
+<p></p>
+<p></p>
+</form>
+</div>
+</div>
+ </div>
+{% block footer %}
+<footer class="text-center  footer_1">
+  <div class="container text-white py-4 py-lg-5">
+    <ul class="list-inline">
+      <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+      <li class="
+list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+</ul>
+<p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project
+</p>
+
+  </div>
+</footer>
+{% endblock  %}
+<!------------------------- End Footer ---------------->
+</body>
+</html>

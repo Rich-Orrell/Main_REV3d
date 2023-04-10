@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>{% block title %} NSCT {% endblock title %}</title>
+
+
+<link rel='stylesheet' href="static/bootstrap.css" type='text/css' >
+<link rel='stylesheet' href="static/custom.css" type='text/css' >
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark main_header">
+        <div class="collapse navbar-collapse" id="navcol-5">
+        <span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon">
+           <a  href="homepage"> <img src="http://192.168.0.165:5000/static/23.png" width="28" height="30" ></a></span>
+    </nav>
+<!------------ End header ------------>
+
+{%  block content %}
+    <h1>Add Case</h1>
+    <form method="POST">
+      <label for="user_id">User ID:</label>
+      <input type="text" name="user_id" id="user_id">
+      <br>
+      <label for="case_type">Case Type:</label>
+      <select name="case_type" id="case_type">
+        {% for case_type in case_types %}
+          <option value="{{ case_type[0] }}">{{ case_type[1] }}</option>
+        {% endfor %}
+      </select>
+      <br>
+      <label for="assigned_officer">Assigned Officer:</label>
+      <select name="assigned_officer" id="assigned_officer">
+        {% for officer in officers %}
+          <option value="{{ officer[0] }}">{{ officer[1] }}</option>
+        {% endfor %}
+      </select>
+      <br>
+      <label for="activity_description">Activity Description:</label>
+      <textarea name="activity_description" id="activity_description"></textarea>
+      <br>
+      <label for="feedback">Feedback:</label>
+      <textarea name="feedback" id="feedback"></textarea>
+      <br>
+      <label for="investigation_note">Investigation Note:</label>
+      <textarea name="investigation_note" id="investigation_note"></textarea>
+      <br>
+      <button type="submit">Submit</button>
+    </form>
+
+    {% endblock  %}
+
+<!------------------------- Footer ---------------->
+{% block footer %}
+    <footer class="text-center  footer_1">
+        <div class="container text-white py-4 py-lg-5 ">
+            <ul class="list-inline">
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">UOE</a></li>
+                <li class="list-inline-item me-4"><a class="link-light" href="https://online.essex.ac.uk">GITHUB</a></li>
+            </ul>
+            <p class="text-muted mb-0" style="font-size: 9pt;color: #fff !important">Copyright © 2023 University of Essex Online MSC Computer Science Project</p>
+        </div>
+    </footer>
+    {% endblock  %}
+<!------------------------- End Footer ---------------->
+
+</body>
+</html>
